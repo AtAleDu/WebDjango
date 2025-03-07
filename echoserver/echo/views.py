@@ -44,10 +44,30 @@ def user_login(request):
 
 # Отображение списка книг
 def book_list(request):
-    books_list = Book.objects.all().order_by('title')  # Сортировка по названию
-    paginator = Paginator(books_list, 2)  # 2 элемента на странице
+    books = Book.objects.all()
+
+    # Фильтрация по автору
+    author = request.GET.get('author')
+    if author:
+        books = books.filter(author__icontains=author)
+
+    # Фильтрация по названию
+    title = request.GET.get('title')
+    if title:
+        books = books.filter(title__icontains=title)
+
+    # Сортировка по цене
+    sort = request.GET.get('sort')
+    if sort == 'price_desc':
+        books = books.order_by('-price')  # Сортировка по убыванию цены
+    elif sort == 'price_asc':
+        books = books.order_by('price')  # Сортировка по возрастанию цены
+
+    # Пагинация
+    paginator = Paginator(books, 10)  # 10 книг на странице
     page_number = request.GET.get('page')
     books = paginator.get_page(page_number)
+
     return render(request, 'books/book_list.html', {'books': books})
 
 # Отображение деталей книги
