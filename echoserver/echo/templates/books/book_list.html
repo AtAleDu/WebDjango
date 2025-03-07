@@ -1,0 +1,40 @@
+{% extends 'books/base.html' %}
+
+{% block title %}Список книг{% endblock %}
+
+{% block content %}
+<h1>Список книг</h1>
+
+{% if user.is_authenticated %}
+    <a class="button" href="{% url 'book_new' %}">Добавить новую книгу</a>
+{% endif %}
+
+<ul style="list-style: none; padding: 0;">
+    {% for book in books %}
+        <li style="background: white; padding: 10px; margin: 10px 0; border-radius: 8px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">
+            <strong>{{ book.title }}</strong> - {{ book.author }} - {{ book.price }} руб.
+
+            {% if user.is_authenticated and user.role == 'admin' %}
+                <a class="button" href="{% url 'book_edit' book.pk %}">Изменить</a>
+                <a class="button" href="{% url 'book_delete' book.pk %}" style="background-color: #d9534f;">Удалить</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+<div class="pagination" style="text-align: center; margin-top: 20px;">
+    <span class="step-links">
+        {% if books.has_previous %}
+            <a class="button" href="?page=1">&laquo; первая</a>
+            <a class="button" href="?page={{ books.previous_page_number }}">предыдущая</a>
+        {% endif %}
+        <span class="current">
+            Страница {{ books.number }} из {{ books.paginator.num_pages }}.
+        </span>
+        {% if books.has_next %}
+            <a class="button" href="?page={{ books.next_page_number }}">следующая</a>
+            <a class="button" href="?page={{ books.paginator.num_pages }}">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

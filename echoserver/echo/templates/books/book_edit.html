@@ -1,0 +1,21 @@
+{% extends 'books/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Изменить книгу{% else %}Добавить новую книгу{% endif %}{% endblock %}
+
+{% block content %}
+<h1>{% if form.instance.pk %}Изменить книгу{% else %}Добавить новую книгу{% endif %}</h1>
+
+{% if user.is_authenticated and user.role == 'admin' or not form.instance.pk %}
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+{% else %}
+    <p>У вас нет прав для редактирования этой книги.</p>
+{% endif %}
+
+<a class="button" href="{% url 'book_list' %}">Назад к списку</a>
+{% endblock %}

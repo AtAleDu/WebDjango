@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bookshop{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e7e8ec;
+            color: #2c2d2e;
+        }
+        header {
+            background-color: #4680c2;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #4a76a8;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+        .button:hover {
+            background-color: #5d89bf;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #4680c2;
+            color: white;
+            margin-top: 20px;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container input, .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .form-container button {
+            background-color: #4a76a8;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #5d89bf;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bookshop</h1>
+        <nav>
+            {% if user.is_authenticated %}
+                <span>Вы вошли как <strong>{{ user.username }}</strong> ({{ user.get_role_display }})</span>
+                <a class="button" href="{% url 'logout' %}">Выйти</a>
+            {% else %}
+                <a class="button" href="{% url 'login' %}">Войти</a>
+                <a class="button" href="{% url 'signup' %}">Зарегистрироваться</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bookshop. Все права защищены.</p>
+    </footer>
+</body>
+</html>
