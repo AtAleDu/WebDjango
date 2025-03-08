@@ -1,33 +1,44 @@
+import json
+
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Book
-from .forms import BookForm
+from .forms import BookForm, SignUpForm, LoginForm
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from .forms import SignUpForm, LoginForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model
+def check_username(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        User = get_user_model()  # Получаем кастомную модель пользователя
+        exists = User.objects.filter(username=username).exists()
+        return JsonResponse({'exists': exists})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def user_logout(request):
     logout(request)
     return redirect('book_list')
+
 def is_admin(user):
     return user.role == 'admin'
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()  # Сохраняем пользователя
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('book_list')
+            user = authenticate(username=username, password=raw_password)  # Аутентифицируем пользователя
+            if user is not None:
+                login(request, user)  # Входим в систему
+                return redirect('book_list')  # Перенаправляем на главную страницу
     else:
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
-
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
@@ -86,6 +97,7 @@ def book_new(request):
     else:
         form = BookForm()
     return render(request, 'books/book_edit.html', {'form': form})
+
 # Редактирование существующей книги
 @user_passes_test(is_admin)
 def book_edit(request, pk):
@@ -100,7 +112,6 @@ def book_edit(request, pk):
     return render(request, 'books/book_edit.html', {'form': form})
 
 # Удаление книги
-
 @user_passes_test(is_admin)
 def book_delete(request, pk):
     book = get_object_or_404(Book, pk=pk)
