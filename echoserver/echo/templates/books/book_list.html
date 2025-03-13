@@ -31,6 +31,10 @@
         <li style="background: white; padding: 10px; margin: 10px 0; border-radius: 8px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">
             <strong>{{ book.title }}</strong> - {{ book.author }} - {{ book.price }} руб.
 
+            {% if user.is_authenticated %}
+                <a class="button" href="{% url 'add_to_cart' book.id %}">Положить в корзину</a>
+            {% endif %}
+
             {% if user.is_authenticated and user.role == 'admin' %}
                 <a class="button" href="{% url 'book_edit' book.pk %}">Изменить</a>
                 <a class="button" href="{% url 'book_delete' book.pk %}" style="background-color: #d9534f;">Удалить</a>
