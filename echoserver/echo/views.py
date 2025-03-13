@@ -1,5 +1,4 @@
 import json
-
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Book
 from .forms import BookForm, SignUpForm, LoginForm
@@ -10,6 +9,18 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
+from .forms import UserProfileForm
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = UserProfileForm(instance=request.user)
+    return render(request, 'profile.html', {'form': form})
+
 def check_username(request):
     if request.method == 'POST':
         username = request.POST.get('username')

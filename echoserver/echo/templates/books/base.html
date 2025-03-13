@@ -96,6 +96,7 @@
         <nav>
             {% if user.is_authenticated %}
                 <span>Вы вошли как <strong>{{ user.username }}</strong> ({{ user.get_role_display }})</span>
+                <a class="button" href="{% url 'profile' %}">Личный кабинет</a>
                 <a class="button" href="{% url 'logout' %}">Выйти</a>
             {% else %}
                 <a class="button" href="{% url 'login' %}">Войти</a>

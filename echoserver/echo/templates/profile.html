@@ -1,0 +1,17 @@
+{% extends 'books/base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+<h1>Личный кабинет</h1>
+
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить изменения</button>
+    </form>
+</div>
+
+<a class="button" href="{% url 'book_list' %}">Назад к списку книг</a>
+{% endblock %}
