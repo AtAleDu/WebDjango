@@ -17,7 +17,11 @@ from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem, Order, OrderItem
 
-
+@login_required
+def order_list(request):
+    # Получаем все заказы текущего пользователя
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'orders/order_list.html', {'orders': orders})
 
 @login_required
 def order_detail(request, order_id):

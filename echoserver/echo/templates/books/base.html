@@ -91,19 +91,21 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Bookshop</h1>
-        <nav>
-            {% if user.is_authenticated %}
-                <span>Вы вошли как <strong>{{ user.username }}</strong> ({{ user.get_role_display }})</span>
-                <a class="button" href="{% url 'profile' %}">Личный кабинет</a>
-                <a class="button" href="{% url 'logout' %}">Выйти</a>
-            {% else %}
-                <a class="button" href="{% url 'login' %}">Войти</a>
-                <a class="button" href="{% url 'signup' %}">Зарегистрироваться</a>
-            {% endif %}
-        </nav>
-    </header>
+ <header>
+    <h1>Bookshop</h1>
+    <nav>
+        {% if user.is_authenticated %}
+            <span>Вы вошли как <strong>{{ user.username }}</strong> ({{ user.get_role_display }})</span>
+            <a class="button" href="{% url 'profile' %}">Личный кабинет</a>
+            <a class="button" href="{% url 'view_cart' %}">Корзина</a>
+            <a class="button" href="{% url 'order_list' %}">Мои заказы</a>  <!-- Новая ссылка -->
+            <a class="button" href="{% url 'logout' %}">Выйти</a>
+        {% else %}
+            <a class="button" href="{% url 'login' %}">Войти</a>
+            <a class="button" href="{% url 'signup' %}">Зарегистрироваться</a>
+        {% endif %}
+    </nav>
+</header>
 
     <main>
         {% block content %}{% endblock %}
