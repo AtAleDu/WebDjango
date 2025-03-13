@@ -1,16 +1,41 @@
 import json
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Book, Cart, CartItem
+from django.shortcuts import  get_object_or_404
+from .models import Book, CartItem
 from .forms import BookForm, SignUpForm, LoginForm
 from django.core.paginator import Paginator
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import  user_passes_test
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from .forms import UserProfileForm
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Cart
 
+
+@login_required
+def remove_from_cart(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    cart_item.delete()
+    return redirect('view_cart')
+@login_required
+def view_cart(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    return render(request, 'cart/view_cart.html', {'cart': cart})
+
+@login_required
+def add_to_cart(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book)
+
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    return redirect('book_list')
 
 @login_required
 def add_to_cart(request, book_id):

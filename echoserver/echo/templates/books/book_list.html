@@ -5,7 +5,7 @@
 {% block content %}
 <h1>Список книг</h1>
 
-<!-- Форма для фильтрации -->
+<!-- Форма для фильтрации и сортировки -->
 <form method="get" action="{% url 'book_list' %}" style="margin-bottom: 20px;">
     <label for="author">Автор:</label>
     <input type="text" id="author" name="author" value="{{ request.GET.author }}">
@@ -24,6 +24,7 @@
 
 {% if user.is_authenticated %}
     <a class="button" href="{% url 'book_new' %}">Добавить новую книгу</a>
+    <a class="button" href="{% url 'view_cart' %}">Корзина</a>
 {% endif %}
 
 <ul style="list-style: none; padding: 0;">

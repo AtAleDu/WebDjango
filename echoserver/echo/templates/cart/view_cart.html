@@ -1,0 +1,24 @@
+{% extends 'books/base.html' %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<h1>Ваша корзина</h1>
+
+{% if cart.items.all %}
+    <ul>
+        {% for item in cart.items.all %}
+            <li>
+                {{ item.book.title }} - {{ item.quantity }} шт. 
+                ({{ item.total_price }} руб.)
+                <a href="{% url 'remove_from_cart' item.id %}" class="button">Удалить</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <p><strong>Итого:</strong> {{ cart.total_price }} руб.</p>
+{% else %}
+    <p>Ваша корзина пуста.</p>
+{% endif %}
+
+<a class="button" href="{% url 'book_list' %}">Продолжить покупки</a>
+{% endblock %}
