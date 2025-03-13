@@ -1,0 +1,22 @@
+{% extends 'books/base.html' %}
+
+{% block title %}Детали заказа{% endblock %}
+
+{% block content %}
+<h1>Детали заказа #{{ order.id }}</h1>
+
+<p><strong>Дата заказа:</strong> {{ order.created_at }}</p>
+<p><strong>Общая стоимость:</strong> {{ order.total_price }} руб.</p>
+
+<h2>Товары в заказе:</h2>
+<ul>
+    {% for item in order.items.all %}
+        <li>
+            {{ item.book.title }} - {{ item.quantity }} шт. 
+            ({{ item.price }} руб. за шт.)
+        </li>
+    {% endfor %}
+</ul>
+
+<a class="button" href="{% url 'book_list' %}">Вернуться к покупкам</a>
+{% endblock %}

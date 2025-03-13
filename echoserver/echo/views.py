@@ -13,6 +13,42 @@ from .forms import UserProfileForm
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Cart
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Cart, CartItem, Order, OrderItem
+
+
+
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'orders/order_detail.html', {'order': order})
+
+@login_required
+def create_order(request):
+    # Получаем корзину пользователя
+    cart = get_object_or_404(Cart, user=request.user)
+
+    # Создаем новый заказ
+    order = Order.objects.create(
+        user=request.user,
+        total_price=cart.total_price
+    )
+
+    # Переносим товары из корзины в заказ
+    for cart_item in cart.items.all():
+        OrderItem.objects.create(
+            order=order,
+            book=cart_item.book,
+            quantity=cart_item.quantity,
+            price=cart_item.book.price
+        )
+
+    # Очищаем корзину после создания заказа
+    cart.items.all().delete()
+
+    # Перенаправляем пользователя на страницу с деталями заказа
+    return redirect('order_detail', order_id=order.id)
 
 
 @login_required
