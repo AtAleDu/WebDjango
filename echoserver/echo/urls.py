@@ -1,8 +1,10 @@
 # urls.py
-from django.urls import path
+from django.urls import path, include
 from . import views
 
+
 urlpatterns = [
+    path('captcha/', include('captcha.urls')),
     path('add_to_cart/<int:book_id>/', views.add_to_cart, name='add_to_cart'),
     path('check-username/', views.check_username, name='check_username'),
     path('logout/', views.user_logout, name='logout'),

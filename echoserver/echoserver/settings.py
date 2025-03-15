@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'captcha',
     'django.contrib.staticfiles',
     'echo',
 ]
@@ -118,12 +119,19 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+CAPTCHA_TEST_MODE = True
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
 USE_TZ = True
 
+CAPTCHA_FONT_SIZE = 40  # Размер шрифта
+CAPTCHA_IMAGE_SIZE = (120, 60)  # Размер изображения
+CAPTCHA_LENGTH = 6  # Количество символов
+
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

@@ -1,21 +1,12 @@
 import json
-from django.shortcuts import  get_object_or_404
-from .models import Book, CartItem
-from .forms import BookForm, SignUpForm, LoginForm
-from django.core.paginator import Paginator
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.decorators import  user_passes_test
-from django.contrib.auth import logout
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
-from django.contrib.auth import get_user_model
-from .forms import UserProfileForm
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import Cart
-from django.shortcuts import redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Cart, CartItem, Order, OrderItem
+from django.contrib.auth import login, authenticate, logout, get_user_model
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import Book, Cart, CartItem, Order, OrderItem
+from .forms import BookForm, SignUpForm, LoginForm, UserProfileForm
+from django.core.paginator import Paginator
+
 
 @login_required
 def order_list(request):
@@ -78,16 +69,6 @@ def add_to_cart(request, book_id):
     return redirect('book_list')
 
 @login_required
-def add_to_cart(request, book_id):
-    book = get_object_or_404(Book, id=book_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book)
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-    return redirect('book_list')
-
-@login_required
 def profile(request):
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=request.user)
@@ -113,14 +94,22 @@ def user_logout(request):
 def is_admin(user):
     return user.role == 'admin'
 
+User = get_user_model()  # Получаем текущую модель пользователя
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()  # Сохраняем пользователя
+            # Сохраняем пользователя
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password1'])  # Хэшируем пароль
+            user.save()  # Сохраняем пользователя в базе данных
+
+            # Аутентифицируем пользователя
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)  # Аутентифицируем пользователя
+            user = authenticate(username=username, password=raw_password)
+
             if user is not None:
                 login(request, user)  # Входим в систему
                 return redirect('book_list')  # Перенаправляем на главную страницу

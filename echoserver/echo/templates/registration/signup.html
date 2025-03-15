@@ -35,6 +35,13 @@
             {{ form.password2 }}
         </div>
 
+        <!-- Поле для капчи -->
+        <div>
+            <label for="id_captcha">Капча:</label>
+            {{ form.captcha }}
+            <span id="captcha-error" style="color: red;"></span>
+        </div>
+
         <button type="submit">Проверить данные</button>
         <button type="button" id="confirm-registration" style="display: none;">Подтвердить регистрацию</button>
     </form>

@@ -7,7 +7,25 @@
     <h2>Вход в Bookshop</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        <!-- Поле для логина -->
+        <div>
+            <label>Логин:</label>
+            {{ form.username }}
+        </div>
+
+        <!-- Поле для пароля -->
+        <div>
+            <label>Пароль:</label>
+            {{ form.password }}
+        </div>
+
+        <!-- Поле для капчи -->
+        <div>
+            <label>Капча:</label>
+            {{ form.captcha }}
+        </div>
+
         <button type="submit">Войти</button>
     </form>
     <p>Еще нет аккаунта? <a href="{% url 'signup' %}">Зарегистрироваться</a></p>
