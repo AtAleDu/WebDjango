@@ -83,10 +83,10 @@ WSGI_APPLICATION = 'echoserver.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Или 'django.db.backends.sqlite3'
-        'NAME': 'bookshop',                    # Имя базы данных
-        'USER': 'root',                       # Пользователь MySQL
-        'PASSWORD': 'Sofa2005',           # Пароль пользователя
-        'HOST': 'localhost',                   # Хост
+        'NAME': 'Bookshops',                    # Имя базы данных
+        'USER': 'Artur2311',                       # Пользователь MySQL
+        'PASSWORD': 'Dudarev2001',           # Пароль пользователя
+        'HOST': 'Artur2311.mysql.pythonanywhere-services.com',                   # Хост
         'PORT': '3306',                        # Порт
     }
 }
